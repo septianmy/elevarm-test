@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { rmSync } from 'fs';
 import * as model from "../models/MerchantModel"
 
 const index = async (req: Request, res: Response, next: NextFunction) => {

@@ -1,5 +1,6 @@
 import { query } from '../../../../config/baseFunction';
 import { dataMerchant } from '../types/model';
+
 export const getAllMerchant = () => {
     return query('SELECT * FROM merchants', "")
 }
