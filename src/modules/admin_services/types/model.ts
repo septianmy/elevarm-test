@@ -21,3 +21,11 @@ export interface dataRider {
     rating: Number, 
     riding_status: Boolean
 }
+
+export interface dataAdmin {
+    name: String, 
+    username: String, 
+    password: String, 
+    email: String, 
+    role: Number
+}
