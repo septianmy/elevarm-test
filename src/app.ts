@@ -2,6 +2,7 @@ import express, {Request, Response, NextFunction} from "express"
 import bodyParser from 'body-parser';
 import userModule from '../src/modules/users_services/';
 import adminModule from '../src/modules/admin_services/';
+import foodServicesModule from '../src/modules/food_services'
 
 const app = express()
 const port = 3000
@@ -9,9 +10,10 @@ app.use(bodyParser.json());
 
 app.use(userModule);
 app.use(adminModule);
+app.use(foodServicesModule)
 
 app.get('/', (req: Request, res: Response) => {
-    res.send('Hello, TypeScript and Express!');
+    res.send('Gojek App Services');
 });
 
 app.listen(port, () => {
