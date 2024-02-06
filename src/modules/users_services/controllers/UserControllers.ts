@@ -15,7 +15,6 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
                 }
                 let id_client = checkUser[0].id
                 let payload = {id_client}
-                console.log("payload",payload)
                 let createToken = await utils.createToken(payload)
 
                 res.json({
@@ -53,7 +52,6 @@ const listUser = async (req: CustomRequest, res: Response) => {
                 message: "Data not found", 
             })
         }
-        
     } catch (error) {
         res.json({
             status: false, 

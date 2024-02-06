@@ -1,5 +1,5 @@
 import express, { Router, Request, Response, NextFunction } from 'express';
-import authClientMiddleware from '../../common/middleware/AuthClient';
+import {authClientMiddleware} from '../../common/middleware/AuthClient';
 import CustomRequest from '../../common/types/CustomRequest';
 
 const router: Router = express.Router();
