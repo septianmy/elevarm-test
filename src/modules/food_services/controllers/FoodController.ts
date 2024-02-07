@@ -90,7 +90,6 @@ const detailFood = async (req: Request, res: Response, next: NextFunction) => {
             })
         }
     } catch (error) {
-        console.log(error)
         res.json({
             status: false, 
             message: "Something Wrong"
