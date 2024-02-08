@@ -76,3 +76,77 @@ export const findFoodOrderByIdforUser = async (id: String, user_id: any) => {
                     
                 GROUP BY f.id, u.name, m.merchant_name, m.address`, [id, user_id])
 }
+
+export const listOrderMerchant = async (merchant_id: any, status: any) => {
+    return query(`SELECT 
+                    f.id,
+                    f.user_id, 
+                    u.name, 
+                    f.merchant_id, 
+                    m.merchant_name, 
+                    m.address,
+                    f.distance, 
+                    f.fare,
+                    f.status, 
+                    COUNT(fd.id) AS total_item, 
+                    CASE 
+                        WHEN COUNT(fd.id) = 0 THEN '[]'::json
+                    ELSE 
+                        JSON_AGG(JSON_BUILD_OBJECT(
+                            'id',fd.id,
+                            'food_id',fd.food_id, 
+                            'food_name', mf.name, 
+                            'price', fd.price, 
+                            'quantity', fd.quantity
+                        ))  
+                    END AS order_items
+                  FROM 
+                    food_orders f
+                  LEFT JOIN users u ON f.user_id = u.id
+                  LEFT JOIN merchants m ON f.merchant_id = m.id
+                  LEFT JOIN food_order_details fd ON f.id = fd.food_order_id
+                  LEFT JOIN food mf ON fd.food_id = mf.id
+                  WHERE 
+                    f.merchant_id = $1 AND f.status = $2
+                  GROUP BY f.id, u.name, m.merchant_name, m.address`, [merchant_id, status])
+}
+
+export const detailOrderMerchant = async (id: String, merchant_id: any) => {
+    return query(`SELECT 
+                    f.id,
+                    f.user_id, 
+                    u.name, 
+                    f.merchant_id, 
+                    m.merchant_name, 
+                    m.address,
+                    f.origin_address, 
+                    f.destination_address,
+                    f.distance, 
+                    f.fare,
+                    f.status, 
+                    COUNT(fd.id) AS total_item, 
+                    CASE 
+                        WHEN COUNT(fd.id) = 0 THEN '[]'::json
+                    ELSE 
+                        JSON_AGG(JSON_BUILD_OBJECT(
+                            'id',fd.id,
+                            'food_id',fd.food_id, 
+                            'food_name', mf.name, 
+                            'price', fd.price, 
+                            'quantity', fd.quantity
+                        ))  
+                    END AS order_items
+                  FROM 
+                    food_orders f
+                  LEFT JOIN users u ON f.user_id = u.id
+                  LEFT JOIN merchants m ON f.merchant_id = m.id
+                  LEFT JOIN food_order_details fd ON f.id = fd.food_order_id
+                  LEFT JOIN food mf ON fd.food_id = mf.id
+                  WHERE 
+                    f.id = $1 AND f.merchant_id = $2
+                  GROUP BY f.id, u.name, m.merchant_name, m.address`, [id, merchant_id])
+}
+
+export const updateOrderMerchant = async (status: any, id: String, merchant_id: any) => {
+    return query('UPDATE food_orders SET status = $1 WHERE id=$2 AND merchant_id=$3', [status, id, merchant_id])
+}
