@@ -46,7 +46,21 @@ export const createOrder = (params: dataRideOrder) => {
 }
 
 export const detailOrder = (id: String, user_id: any) => {
-    return query('SELECT * FROM ride_orders WHERE id = $1 AND customer_id=$2', [id, user_id])
+    return query(`SELECT 
+                    u2.name AS customer_name,
+                    ro.origin_address, 
+                    ro.destination_address,
+                    ro.distance, 
+                    ro.fare,
+                    u.name as rider_name,
+                    r.plate_number, 
+                    r.vehicle, 
+                    ro.status
+                  FROM ride_orders ro 
+                  LEFT JOIN riders r ON ro.rider_id = r.id
+                  LEFT JOIN users u ON r.user_id = u.id
+                  LEFT JOIN users u2 ON ro.customer_id = u2.id 
+                  WHERE ro.id = $1 AND ro.customer_id=$2`, [id, user_id])
 }
 
 //rider query

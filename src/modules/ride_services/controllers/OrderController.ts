@@ -21,7 +21,7 @@ const createOrderRiding = async (req: CustomRequest, res: Response, next: NextFu
                 distance: distance,
                 fare: fare,
                 rider_id: rider_id[0].id,
-                order_type: order_type,
+                order_type: 1,
                 status: 0,
                 food_order_id: food_order_id
             })
@@ -31,7 +31,9 @@ const createOrderRiding = async (req: CustomRequest, res: Response, next: NextFu
             res.json({
                 status: true, 
                 message: "Ride order successfully create",
-                data: createRideOrder[0].id
+                data: {
+                    order_id: createRideOrder[0].id
+                }
             })
         } else {
             await model.rollback()

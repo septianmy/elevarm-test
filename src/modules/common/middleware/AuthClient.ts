@@ -20,7 +20,7 @@ const authClientMiddleware = async (req: CustomRequest, res: Response, next: Nex
             } else {
                 res.send({
                     status: false, 
-                    message: "Unauthorized 2"
+                    message: "Unauthorized"
                 })
             }
         } else {
