@@ -1,5 +1,5 @@
 import { query } from '../../../../config/baseFunction';
-import { dataUser, dataRider, dataMerchant, dataProfileRider } from '../interfaces/model';
+import { dataUser, dataRider, dataMerchant, dataProfileRider, dataProfileMerchant } from '../interfaces/model';
 
 export const begin = () => {
     return query('BEGIN', '')
@@ -68,4 +68,18 @@ export const createDataMerchant = (params: dataMerchant) => {
 
 export const findDataMerchant = (id: String) => {
     return query('SELECT id FROM merchants WHERE user_id = $1', [id])
+}
+
+export const findDataMerchantByMerchantId = (merchant_id: any) => {
+    return query(`SELECT 
+                    m.user_id, u.username, u.name, u.email, u.address, u.phone_number, u.birth_date,
+                    m.merchant_name, m.address AS merchant_address
+                FROM merchants m
+                LEFT JOIN users u ON m.user_id = u.id 
+                WHERE m.id = $1`, [merchant_id])
+}
+
+export const updateProfileMerchant = async (params: dataProfileMerchant, merchant_id: any, user_id: any) => {
+    await query(`UPDATE users SET name=$1, username=$2, email=$3, birth_date=$4, address=$5, phone_number=$6 WHERE id=$7`, [params.name, params.username, params.email, params.birth_date, params.address, params.phone_number, user_id])
+    await query(`UPDATE merchants SET merchant_name=$1, address=$2 WHERE id=$3`, [params.merchant_name, params.merchant_address, merchant_id])
 }

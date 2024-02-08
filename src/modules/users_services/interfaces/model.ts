@@ -31,3 +31,14 @@ export interface dataProfileRider {
     phone_number: String | Number, 
     driving_license_number: Number
 }
+
+export interface dataProfileMerchant {
+    name: String,
+    username: String, 
+    email: String, 
+    birth_date: Date, 
+    address: String, 
+    phone_number: String | Number, 
+    merchant_name: String,
+    merchant_address: String
+}

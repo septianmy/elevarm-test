@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import CustomRequest from '../../common/types/CustomRequest';
 import * as model from "../models/UserModel"
 import * as utils from "../../common/utils/utils"
 
@@ -103,6 +104,82 @@ const registerMerchant = async (req: Request, res: Response, next: NextFunction)
     }
 }
 
+const detailProfileMerchant = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    try {
+        let merchant_id = req.user
+        const data = await model.findDataMerchantByMerchantId(merchant_id)
+        if(data.length != 0){
+            res.json({
+                status: true, 
+                data: data[0]
+            })
+        } else {
+            res.json({
+                status: false, 
+                message: "Data not found"
+            })
+        }
+        
+    } catch (error) {
+        res.json({
+            status: false, 
+            message: "Something Wrong"
+        })
+    }
+}
+
+const editProfileMerchant = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    try {
+        let merchant_id = req.user 
+        let {name, username, email, birth_date, address, phone_number, merchant_name, merchant_address } = req.body
+        await model.begin()
+        const data = await model.findDataMerchantByMerchantId(merchant_id)
+        if(data.length != 0){
+            if(username != data[0].username){
+                const checkUsername = await model.findUserByUsername(username)
+                if(checkUsername.length != 0){
+                    await model.rollback()
+                    return res.json({
+                        status: false, 
+                        message: "New Username is exist"
+                    })
+                }
+            } 
+
+            const updateData = await model.updateProfileMerchant({
+                name: name,
+                username: username,
+                email: email,
+                birth_date: birth_date,
+                address: address,
+                phone_number: phone_number,
+                merchant_name: merchant_name, 
+                merchant_address: merchant_address
+            }, merchant_id, data[0].user_id)
+
+            await model.commit()
+
+            res.json({
+                status: true, 
+                message: "Edit Profile Success"
+            })
+        } else {
+            await model.rollback()
+            res.json({
+                status: false, 
+                message: "Data not found"
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        await model.rollback()
+        res.json({
+            status: false, 
+            message: "Something Wrong"
+        })
+    }
+}
+
 export {
-    loginMerchant, registerMerchant
+    loginMerchant, registerMerchant, detailProfileMerchant, editProfileMerchant
 }

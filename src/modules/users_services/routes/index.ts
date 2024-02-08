@@ -1,12 +1,12 @@
 import express, { Router, Request, Response, NextFunction } from 'express';
-import {authClientMiddleware, authRiderMiddleware} from '../../common/middleware/AuthClient';
+import {authClientMiddleware, authMerchantMiddleware, authRiderMiddleware} from '../../common/middleware/AuthClient';
 import CustomRequest from '../../common/types/CustomRequest';
 
 const router: Router = express.Router();
 
 import {detailUser, registerUser, editUser, deleteUser, login} from '../controllers/UserControllers';
 import {detailProfileRider, editProfileRider, loginRider, registerRider} from '../controllers/RiderController'
-import { loginMerchant, registerMerchant } from '../controllers/MerchantController';
+import { loginMerchant, registerMerchant, detailProfileMerchant, editProfileMerchant } from '../controllers/MerchantController';
 
 router.post('/login', login)
 router.post('/register', authClientMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => registerUser(req, res, next))
@@ -23,5 +23,6 @@ router.put('/data/rider', authRiderMiddleware, (req:CustomRequest, res:Response,
 //merchant route 
 router.post('/merchant/login', loginMerchant)
 router.post('/merchant', registerMerchant)
-
+router.get('/data/merchant', authMerchantMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => detailProfileMerchant(req, res, next))
+router.put('/data/merchant', authMerchantMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => editProfileMerchant( req, res, next))
 export default router;
