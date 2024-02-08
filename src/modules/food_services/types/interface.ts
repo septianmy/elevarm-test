@@ -20,3 +20,14 @@ export interface dataFoodMerchant {
     status: Boolean, 
     food_type: Number
 }
+
+export interface OrderItem {
+    food_id: string;
+    quantity: number;
+}
+
+export interface payloadCheckFareFood {
+    merchant_id: string;
+    destination_address: string;
+    list_order: OrderItem[];
+}

@@ -42,6 +42,14 @@ export const detailFoods = (id: String) => {
     return query(`SELECT food.id, food.name, food.price, food.image_url, merchants.merchant_name, merchants.address FROM food LEFT JOIN merchants ON food.merchant_id = merchants.id WHERE food.id=$1`, [id])
 }
 
+export const compareFoodIdAndMerchant = (food_id:any, merchant_id: any) => {
+    return query('SELECT COUNT(*) AS count FROM food WHERE id = $1 AND merchant_id = $2', [food_id, merchant_id])
+}
+
+export const findPriceFoodById = (id: any) => {
+    return query('SELECT price FROM food WHERE id = $1', [id])
+}
+
 //CRUD Food Merchant 
 export const listFoodMerchant = (merchant_id: any) => {
     return query('SELECT food.id, merchants.merchant_name, food.name, food.price, food.status, food.food_type FROM food LEFT JOIN merchants ON food.merchant_id = merchants.id WHERE merchants.id = $1', [merchant_id])

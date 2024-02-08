@@ -9,7 +9,7 @@ const checkFare = async (req: CustomRequest, res: Response, next: NextFunction) 
         let {origin_address, destination_address} = req.body
 
         if (!origin_address || !destination_address) {
-            res.json({
+            return res.json({
                 status: false, 
                 message: "Both start and destination addresses are required"
             })

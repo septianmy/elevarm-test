@@ -1,6 +1,63 @@
 import { NextFunction, Request, Response } from 'express';
 import CustomRequest from '../../common/types/CustomRequest';
 import * as model from "../models/OrderModel"
+import * as foodModel from "../models/FoodModel"
+import * as utils from "../utils/utils"
+import * as commonUtils from "../../common/utils/utils"
+
+const checkFareFoodOrder = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    try {
+        let user_id = req.user
+        const payload = req.body
+
+        await utils.checkPayloadCheckFareFood(payload)
+            .then(async () => {
+                const checkMerchantId = await foodModel.detailMerchant(payload.merchant_id)
+                if(checkMerchantId.length != 0){
+                    let origin_address = checkMerchantId[0].address
+                    let destination_address = payload.destination_address
+
+                    if (!origin_address || !destination_address) {
+                        return res.json({
+                            status: false, 
+                            message: "Both start and destination addresses are required"
+                        })
+                    }
+
+                    const distance = await commonUtils.getDistance(origin_address, destination_address)
+                    const fare = await commonUtils.getFare(distance.value)
+                    const total_order = await utils.getTotalFoodOrder(payload)
+                    let total_payment = fare + total_order
+                    res.json({
+                        status: true, 
+                        message: "Data loaded successfully", 
+                        data: {
+                            distance: distance.text, 
+                            fare: fare, 
+                            total_order: total_order, 
+                            total_payment: total_payment
+                        }
+                    })
+                } else {
+                    res.json({
+                        status: false, 
+                        message: "Invalid Merchant"
+                    })
+                }
+            }).catch((error) => {
+                console.log(error) 
+                res.json({
+                    status: false, 
+                    message: "Invalid Payload or Merchant"
+                })
+            });
+    } catch (error) {
+        res.json({
+            status: false, 
+            message: "Something Wrong"
+        })
+    }
+}
 
 const createFoodOrder = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
@@ -81,5 +138,5 @@ const detailFoodOrder = async (req: CustomRequest, res: Response, next: NextFunc
 }
 
 export {
-    createFoodOrder, detailFoodOrder
+    checkFareFoodOrder, createFoodOrder, detailFoodOrder
 }
