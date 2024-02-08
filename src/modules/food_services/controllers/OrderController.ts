@@ -125,8 +125,9 @@ const createFoodOrder = async (req: CustomRequest, res: Response, next: NextFunc
 
 const detailFoodOrder = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
+        let user_id = req.user
         let {id} = req.params
-        const dataOrder = await model.findFoodOrderByIdforUser(id)
+        const dataOrder = await model.findFoodOrderByIdforUser(id, user_id)
         if(dataOrder.length != 0){
             res.json({
                 status: true, 

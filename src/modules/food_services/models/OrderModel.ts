@@ -42,7 +42,7 @@ export const insertManyFoodOrderDetail = async (order_id: String, params: dataFo
     await query(queryString, value_detail_order);
 }
 
-export const findFoodOrderByIdforUser = async (id: String) => {
+export const findFoodOrderByIdforUser = async (id: String, user_id: any) => {
     return query(`SELECT 
                     f.id,
                     f.user_id, 
@@ -72,6 +72,7 @@ export const findFoodOrderByIdforUser = async (id: String) => {
                 LEFT JOIN food_order_details fd ON f.id = fd.food_order_id
                 LEFT JOIN food mf ON fd.food_id = mf.id
                 WHERE 
-                    f.id = $1
-                GROUP BY f.id, u.name, m.merchant_name, m.address`, [id])
+                    f.id = $1 AND f.user_id = $2
+                    
+                GROUP BY f.id, u.name, m.merchant_name, m.address`, [id, user_id])
 }

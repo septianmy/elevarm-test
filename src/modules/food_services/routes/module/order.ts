@@ -7,7 +7,7 @@ import { checkFareFoodOrder, createFoodOrder, detailFoodOrder } from '../../cont
 const foodOrderModule = (router: Router) => {
     router.post('/check-fare', authClientMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => checkFareFoodOrder(req, res, next))
     router.post('/order', authClientMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => createFoodOrder(req, res, next))
-    router.get('/order/:id', detailFoodOrder)
+    router.get('/order/:id', authClientMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => detailFoodOrder(req, res, next))
 }
 
 export default foodOrderModule
