@@ -221,7 +221,8 @@ const confirmOrder = async (req: CustomRequest, res: Response, next: NextFunctio
                     // get rider 
                     const getRider = await rideModel.getRider()
                     if(getRider.length != 0){
-                         await rideModel.createOrder({
+                         await rideModel.updateRidingStatus(getRider[0].id, true)
+                        const createOrderRide = await rideModel.createOrder({
                             customer_id: data[0].user_id,
                             origin_address: data[0].origin_address,
                             destination_address: data[0].destination_address,
@@ -233,7 +234,7 @@ const confirmOrder = async (req: CustomRequest, res: Response, next: NextFunctio
                             food_order_id: data[0].id
                         })
 
-                        await orderModel.updateOrderMerchant(status, data[0].id, merchant_id) 
+                        await orderModel.updateOrderMerchant(status, createOrderRide[0].id, data[0].id, merchant_id) 
                         await model.commit()
 
                         res.json({
@@ -250,7 +251,7 @@ const confirmOrder = async (req: CustomRequest, res: Response, next: NextFunctio
                 }
             } else if(status == '3') {
                 //cancel by merchant
-                await orderModel.updateOrderMerchant(status, data[0].id, merchant_id)
+                await orderModel.updateOrderMerchant(status, null, data[0].id, merchant_id)
                 await model.commit()
                 res.json({
                     status: true, 

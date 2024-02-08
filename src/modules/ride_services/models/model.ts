@@ -55,7 +55,7 @@ export const updateRidingStatus = (id: any, status: Boolean) => {
 }
 
 export const findOrderRideById = (id: String, rider_id: any) => {
-    return query('SELECT id, status FROM ride_orders WHERE id= $1 AND rider_id=$2', [id, rider_id])
+    return query('SELECT id, status, food_order_id FROM ride_orders WHERE id= $1 AND rider_id=$2', [id, rider_id])
 }
 
 export const getOrderRequestRider = (rider_id: any) => {
@@ -68,8 +68,27 @@ export const getOrderRequestRider = (rider_id: any) => {
                         ro.distance, 
                         ro.fare, 
                         ro.order_type, 
-                        ro.food_order_id
-                  FROM ride_orders ro LEFT JOIN users u ON ro.customer_id = u.id WHERE ro.rider_id = $1 AND ro.status = 0 LIMIT 1`, [rider_id])
+                        ro.food_order_id, 
+                        COUNT(fd.id) AS total_item, 
+                        CASE 
+                            WHEN COUNT(fd.id) = 0 THEN '[]'::json
+                        ELSE 
+                            JSON_AGG(JSON_BUILD_OBJECT(
+                                'id',fd.id,
+                                'food_id',fd.food_id, 
+                                'food_name', mf.name, 
+                                'price', fd.price, 
+                                'quantity', fd.quantity
+                            ))  
+                        END AS order_items
+                  FROM ride_orders ro 
+                  LEFT JOIN users u ON ro.customer_id = u.id
+                  LEFT JOIN food_orders fo ON ro.food_order_id = fo.id
+                  LEFT JOIN food_order_details fd ON fo.id = fd.food_order_id
+                  LEFT JOIN food mf ON fd.food_id = mf.id
+                  WHERE ro.rider_id = $1 AND ro.status = 0 
+                  GROUP BY fo.id, ro.id, u.name, u.phone_number
+                  LIMIT 1`, [rider_id])
 }
 
 export const updateOrderRequestRider = (id: String, rider_id: any, status: any) => {

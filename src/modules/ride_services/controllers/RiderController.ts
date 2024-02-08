@@ -19,6 +19,7 @@ const getOrderRider = async (req: CustomRequest, res: Response, next: NextFuncti
             })
         }
     } catch (error) {
+        console.log(error)
         res.json({
             status: false, 
             message: "Something Wrong"
