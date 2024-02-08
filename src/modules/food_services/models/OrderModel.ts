@@ -18,7 +18,8 @@ export const findMerchantById = (id: String) => {
 }
 
 export const createFoodOrder = (params: dataFoodOrder) => {
-    return query('INSERT INTO food_orders(user_id, merchant_id, address, distance, fare, status) VALUES($1, $2, $3, $4, $5, $6) RETURNING id', [params.user_id, params.merchant_id, params.address, params.distance, params.fare, params.status])
+    return query(`INSERT INTO food_orders(user_id, merchant_id, origin_address, destination_address, distance, fare, status) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id`, 
+                [params.user_id, params.merchant_id, params.origin_address, params.destination_address, params.distance, params.fare, params.status])
 }
 
 export const insertManyFoodOrderDetail = async (order_id: String, params: dataFoodOrderDetail[]) => {

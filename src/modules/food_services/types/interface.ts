@@ -2,7 +2,8 @@ export interface dataFoodOrder {
     user_id: any, 
     merchant_id: String, 
     distance: String, 
-    address: String, 
+    origin_address: String, 
+    destination_address: String, 
     status: Number, 
     fare: Number
 }
