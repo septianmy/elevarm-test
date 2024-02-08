@@ -5,8 +5,8 @@ import CustomRequest from '../../../common/types/CustomRequest';
 import {createOrderRiding, detailOrderRiding} from '../../controllers/OrderController';
 
 const rideOrderModule = (router: Router) => {
-    router.post('/order', authClientMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => createOrderRiding (req, res, next))
-    router.get('/order/:id', authClientMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => detailOrderRiding (req, res, next))
+    router.post('/customer/order', authClientMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => createOrderRiding (req, res, next))
+    router.get('/customer/order/:id', authClientMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => detailOrderRiding (req, res, next))
 }
 
 export default rideOrderModule

@@ -92,6 +92,7 @@ const authRiderMiddleware = async (req: CustomRequest, res: Response, next: Next
                 })
             }
         } else {
+            console.log(verifyToken)
             res.send({
                 status: false, 
                 message: "Invalid Token"

@@ -11,7 +11,7 @@ const createOrderRiding = async (req: CustomRequest, res: Response, next: NextFu
         const rider_id = await model.getRider()
         if(rider_id.length != 0){
             //update status rider 
-            const updateRidingStatusRider = await model.updateRidingStatus(rider_id[0].id)
+            const updateRidingStatusRider = await model.updateRidingStatus(rider_id[0].id, true)
 
             //create rider order
             const createRideOrder = await model.createOrder({

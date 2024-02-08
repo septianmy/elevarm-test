@@ -60,7 +60,7 @@ export async function verifyTokenAdmin(token_client: any){
 
 export async function verifyTokenRider(token_client: any){
     let resultToken = ''
-    jwt.verify(token_client, authConfig.secretAdmin, (err: any, result: any) => {
+    jwt.verify(token_client, authConfig.secretRiderToken, (err: any, result: any) => {
         if (err) {
             return false
         }
