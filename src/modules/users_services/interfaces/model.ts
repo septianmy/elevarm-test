@@ -9,6 +9,17 @@ export interface dataUser {
     user_type: Number
 }
 
+export interface dataProfileCustomer {
+    name: String, 
+    username: String, 
+    email: String, 
+    birth_date: Date, 
+    address: String, 
+    phone_number: String | Number, 
+    user_type: Number
+}
+
+
 export interface dataRider {
     user_id: any, 
     driving_license_number: Number, 

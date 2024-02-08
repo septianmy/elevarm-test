@@ -23,6 +23,7 @@ export async function hashPassword(password: any) {
 
 export async function createToken(payload: any) {
     const token = jwt.sign(payload, authConfig.secret);
+    console.log(token)
     return token
 }
 

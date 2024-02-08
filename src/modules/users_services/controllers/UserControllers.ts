@@ -50,22 +50,35 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
         let {name, username, email, password, birth_date, address, phone_number} = req.body
         const hashpassword = await utils.hashPassword(password)
 
-        const addData = await model.createUser({
-            name: name,
-            username: username,
-            password: hashpassword,
-            email: email,
-            birth_date: new Date(birth_date),
-            address: address,
-            phone_number: phone_number, 
-            user_type: 1
-        })
-
-        res.json({
-            status: true, 
-            message: "Data added succesfully"
-        })
+        await model.begin()
+        const checkUsername = await model.findUserByUsername(username)
+        if(checkUsername.length != 0){
+            await model.rollback()
+            res.json({
+                status: false, 
+                message: "Username is exist"
+            })
+        } else {
+            const addData = await model.createUser({
+                name: name,
+                username: username,
+                password: hashpassword,
+                email: email,
+                birth_date: new Date(birth_date),
+                address: address,
+                phone_number: phone_number, 
+                user_type: 1
+            })
+            
+            await model.commit()
+            res.json({
+                status: true, 
+                message: "Data added succesfully"
+            })
+        }
+        
     } catch (error) {
+        await model.rollback()
         res.json({
             status: false, 
             message: 'Something Wrong'
@@ -73,10 +86,10 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
     }
 }
 
-const detailUser = async (req: Request, res: Response, next: NextFunction) => {
+const detailUser = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
-        let {id} = req.params
-        const data = await model.findUserById(id)
+        let user_id = req.user
+        const data = await model.findUserById(user_id)
 
         if(data.length != 0){
             res.json({
@@ -91,6 +104,7 @@ const detailUser = async (req: Request, res: Response, next: NextFunction) => {
             })
         }
     } catch (error) {
+        console.log(error)
         res.json({
             status: false, 
             message: "Something Wrong"
@@ -98,28 +112,22 @@ const detailUser = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-const editUser = async (req: Request, res: Response, next: NextFunction) => {
+const editUser = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
-        let {id} = req.params
-        let {name, username, email, password, birth_date, address, phone_number} = req.body
+        let user_id = req.user
+        let {name, username, email, birth_date, address, phone_number} = req.body
 
-        const checkUser = await model.findUserById(id)
+        const checkUser = await model.findUserById(user_id)
         if(checkUser.length != 0){
-            if(checkUser[0].password != password){
-                const hashpassword = await utils.hashPassword(password)
-                password = hashpassword
-            } 
-
             const editData = await model.updateUserById({
                 name: name,
                 username: username,
-                password: password,
                 email: email,
                 birth_date: birth_date,
                 address: address,
                 phone_number: phone_number, 
                 user_type: 1
-            }, id)
+            }, user_id)
     
             res.json({
                 status: true, 

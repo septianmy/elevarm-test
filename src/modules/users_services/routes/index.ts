@@ -8,21 +8,21 @@ import {detailUser, registerUser, editUser, deleteUser, login} from '../controll
 import {detailProfileRider, editProfileRider, loginRider, registerRider} from '../controllers/RiderController'
 import { loginMerchant, registerMerchant, detailProfileMerchant, editProfileMerchant } from '../controllers/MerchantController';
 
-router.post('/login', login)
-router.post('/register', authClientMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => registerUser(req, res, next))
-router.get('/data/customer/:id', authClientMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => detailUser(req, res, next))
-router.put('/data/customer/:id', authClientMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => editUser(req, res, next))
-router.delete('/data/customer/:id', authClientMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => deleteUser(req, res, next))
+router.post('/customer/login', login)
+router.post('/customer/register', registerUser)
+router.get('/customer/data', authClientMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => detailUser(req, res, next))
+router.put('/customer/data', authClientMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => editUser(req, res, next))
+// router.delete('/data/customer/:id', authClientMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => deleteUser(req, res, next))
 
 //rider route
-router.post('/rider', registerRider)
+router.post('/rider/register', registerRider)
 router.post('/rider/login', loginRider)
-router.get('/data/rider', authRiderMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => detailProfileRider(req, res, next))
-router.put('/data/rider', authRiderMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => editProfileRider(req, res, next))
+router.get('/rider/data', authRiderMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => detailProfileRider(req, res, next))
+router.put('/rider/data', authRiderMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => editProfileRider(req, res, next))
 
 //merchant route 
 router.post('/merchant/login', loginMerchant)
-router.post('/merchant', registerMerchant)
-router.get('/data/merchant', authMerchantMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => detailProfileMerchant(req, res, next))
-router.put('/data/merchant', authMerchantMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => editProfileMerchant( req, res, next))
+router.post('/merchant/register', registerMerchant)
+router.get('/merchant/data', authMerchantMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => detailProfileMerchant(req, res, next))
+router.put('/merchant/data', authMerchantMiddleware, (req:CustomRequest, res:Response, next:NextFunction) => editProfileMerchant( req, res, next))
 export default router;

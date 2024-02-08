@@ -1,5 +1,5 @@
 import { query } from '../../../../config/baseFunction';
-import { dataUser, dataRider, dataMerchant, dataProfileRider, dataProfileMerchant } from '../interfaces/model';
+import { dataUser, dataProfileCustomer, dataRider, dataMerchant, dataProfileRider, dataProfileMerchant } from '../interfaces/model';
 
 export const begin = () => {
     return query('BEGIN', '')
@@ -25,13 +25,13 @@ export const createUser = (params: dataUser) => {
     return query("INSERT INTO users(name, username, password, email, birth_date, address, phone_number, user_type) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id", [params.name, params.username, params.password, params.email, params.birth_date, params.address, params.phone_number, params.user_type])
 }
 
-export const findUserById = (id: String) => {
-    return query("SELECT name, username, email, birth_date, address, phone_number FROM users WHERE id = $1 RETURNING id", [id])
+export const findUserById = (id: any) => {
+    return query("SELECT name, username, email, birth_date, address, phone_number FROM users WHERE id = $1", [id])
 }
 
-export const updateUserById = (params: dataUser, id: String) => {
-    return query(`UPDATE users SET name=$1, username=$2, password=$3, email=$4, birth_date=$5, address=$6, phone_number=$7 WHERE id=$8`, 
-            [params.name, params.username, params.password, params.email, params.birth_date, params.address, params.phone_number, id])
+export const updateUserById = (params: dataProfileCustomer, id: any) => {
+    return query(`UPDATE users SET name=$1, username=$2, email=$3, birth_date=$4, address=$5, phone_number=$6 WHERE id=$7`, 
+            [params.name, params.username, params.email, params.birth_date, params.address, params.phone_number, id])
 }
 
 export const deleteUser = (id: String) => {
