@@ -6,6 +6,7 @@ const router: Router = express.Router();
 
 import {detailUser, listUser, registerUser, editUser, deleteUser, login} from '../controllers/UserControllers';
 import {loginRider, registerRider} from '../controllers/RiderController'
+import { loginMerchant, registerMerchant } from '../controllers/MerchantController';
 
 router.post('/login', login)
 router.get('/data', authClientMiddleware, (req:CustomRequest, res:Response) => listUser(req, res));
@@ -17,5 +18,9 @@ router.delete('/data/:id', authClientMiddleware, (req:CustomRequest, res:Respons
 //rider route
 router.post('/rider', registerRider)
 router.post('/rider/login', loginRider)
+
+//merchant route 
+router.post('/merchant/login', loginMerchant)
+router.post('/merchant', registerMerchant)
 
 export default router;

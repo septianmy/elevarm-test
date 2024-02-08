@@ -15,3 +15,9 @@ export interface dataRider {
     plate_number: String, 
     vehicle: String
 }
+
+export interface dataMerchant {
+    user_id: any, 
+    merchant_name: String, 
+    merchant_address: String, 
+}

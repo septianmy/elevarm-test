@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import * as model from "../models/UserModel"
 import * as utils from "../../common/utils/utils"
 
-const loginRider = async (req: Request, res: Response, next: NextFunction) => {
+const loginMerchant = async (req: Request, res: Response, next: NextFunction) => {
     try {
         let {username, password} = req.body
         const checkUser = await model.findUserByUsername(username)
@@ -14,16 +14,16 @@ const loginRider = async (req: Request, res: Response, next: NextFunction) => {
                     message: "Incorrect email or password"
                 })
             } else {
-                if(checkUser[0].user_type == 2){
-                    const checkDataRider = await model.findDataRider(checkUser[0].id)
-                    if(checkDataRider.length != 0){
-                        let id_client = checkDataRider[0].id
+                if(checkUser[0].user_type == 3){
+                    const checkDataMerchant = await model.findDataMerchant(checkUser[0].id)
+                    if(checkDataMerchant.length != 0){
+                        let id_client = checkDataMerchant[0].id
                         let payload = {id_client}
-                        let createToken = await utils.createTokenRider(payload)
+                        let createToken = await utils.createTokenMerchant(payload)
                         res.json({
                             status: true, 
                             message: "Login Success", 
-                            clientToken: createToken
+                            merchantToken: createToken
                         })
                     } else {
                         res.json({
@@ -52,9 +52,9 @@ const loginRider = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-const registerRider = async (req: Request, res: Response, next: NextFunction) => {
+const registerMerchant = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        let {name, username, email, password, birth_date, address, phone_number, driving_license_number, plate_number, vehicle } = req.body
+        let {name, username, email, password, birth_date, address, phone_number, merchant_name, merchant_address } = req.body
         const hashpassword = await utils.hashPassword(password)
 
         await model.begin()
@@ -75,30 +75,27 @@ const registerRider = async (req: Request, res: Response, next: NextFunction) =>
                 birth_date: birth_date,
                 address: address,
                 phone_number: phone_number,
-                user_type: 2
+                user_type: 3
             })
 
-            //create data rider
+            //create data merchant
             let user_id = addUser[0].id
-            const addDataRider = await model.createDataRider({
+            const addDataMerchant = await model.createDataMerchant({
                 user_id: user_id,
-                driving_license_number: driving_license_number,
-                plate_number: plate_number,
-                vehicle: vehicle
+                merchant_name: merchant_name,
+                merchant_address: merchant_address
             })
 
             await model.commit()
             res.json({
                 status: true, 
-                message: "Register Rider Successfully",
+                message: "Register Merchant Successfully",
                 data: {
                     user_id : user_id
                 }
             })
         }
     } catch (error) {
-        console.log(error)
-        await model.rollback()
         res.json({
             status: false, 
             message: "Something Wrong"
@@ -107,5 +104,5 @@ const registerRider = async (req: Request, res: Response, next: NextFunction) =>
 }
 
 export {
-    loginRider, registerRider
+    loginMerchant, registerMerchant
 }

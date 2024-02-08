@@ -36,6 +36,11 @@ export async function createTokenRider(payload: any) {
     return token
 }
 
+export async function createTokenMerchant(payload: any) {
+    const token = jwt.sign(payload, authConfig.secretMerchantToken);
+    return token
+}
+
 export async function verifyToken(token_client: any){
     let resultToken = ''
     jwt.verify(token_client, authConfig.secret, (err: any, result: any) => {
@@ -61,6 +66,17 @@ export async function verifyTokenAdmin(token_client: any){
 export async function verifyTokenRider(token_client: any){
     let resultToken = ''
     jwt.verify(token_client, authConfig.secretRiderToken, (err: any, result: any) => {
+        if (err) {
+            return false
+        }
+        resultToken = result.id_client
+    });
+    return resultToken
+}
+
+export async function verifyTokenMerchant(token_client: any){
+    let resultToken = ''
+    jwt.verify(token_client, authConfig.secretMerchantToken, (err: any, result: any) => {
         if (err) {
             return false
         }

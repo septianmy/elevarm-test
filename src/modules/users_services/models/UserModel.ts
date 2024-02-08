@@ -1,5 +1,5 @@
 import { query } from '../../../../config/baseFunction';
-import { dataUser, dataRider } from '../interfaces/model';
+import { dataUser, dataRider, dataMerchant } from '../interfaces/model';
 
 export const begin = () => {
     return query('BEGIN', '')
@@ -45,4 +45,13 @@ export const createDataRider = (params: dataRider) => {
 
 export const findDataRider = (id: String) => {
     return query('SELECT id FROM riders WHERE user_id = $1', [id])
+}
+
+//merchant query 
+export const createDataMerchant = (params: dataMerchant) => {
+    return query('INSERT INTO merchants(user_id, merchant_name, address) VALUES($1, $2, $3)', [params.user_id, params.merchant_name, params.merchant_address])
+}
+
+export const findDataMerchant = (id: String) => {
+    return query('SELECT id FROM merchants WHERE user_id = $1', [id])
 }
