@@ -45,29 +45,6 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-const listUser = async (req: CustomRequest, res: Response) => {
-    try {
-        const data = await model.getAllUser()
-        if(data.length != 0){
-            res.json({
-                status: true, 
-                message: "List User", 
-                data: data
-            })
-        } else {
-            res.json({
-                status: false, 
-                message: "Data not found", 
-            })
-        }
-    } catch (error) {
-        res.json({
-            status: false, 
-            message: 'Something Wrong'
-        })
-    }
-}
-
 const registerUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         let {name, username, email, password, birth_date, address, phone_number} = req.body
@@ -189,5 +166,5 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 export {
-    login, listUser, registerUser, detailUser, editUser, deleteUser
+    login, registerUser, detailUser, editUser, deleteUser
 }

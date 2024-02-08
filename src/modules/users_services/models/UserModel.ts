@@ -1,5 +1,5 @@
 import { query } from '../../../../config/baseFunction';
-import { dataUser, dataRider, dataMerchant } from '../interfaces/model';
+import { dataUser, dataRider, dataMerchant, dataProfileRider } from '../interfaces/model';
 
 export const begin = () => {
     return query('BEGIN', '')
@@ -45,6 +45,20 @@ export const createDataRider = (params: dataRider) => {
 
 export const findDataRider = (id: String) => {
     return query('SELECT id FROM riders WHERE user_id = $1', [id])
+}
+
+export const findDataRiderByRiderId = (rider_id: any) => {
+    return query(`SELECT 
+                    r.user_id, u.username, u.name, u.email, u.address, u.phone_number, u.birth_date,
+                    r.plate_number, r.vehicle, r.driving_license_number 
+                FROM riders r 
+                LEFT JOIN users u ON r.user_id = u.id 
+                WHERE r.id = $1`, [rider_id])
+}
+
+export const updateProfileRider = async (params: dataProfileRider, rider_id: any, user_id: any) => {
+    await query(`UPDATE users SET name=$1, username=$2, email=$3, birth_date=$4, address=$5, phone_number=$6 WHERE id=$7`, [params.name, params.username, params.email, params.birth_date, params.address, params.phone_number, user_id])
+    await query(`UPDATE riders SET driving_license_number=$1 WHERE id=$2`, [params.driving_license_number, rider_id])
 }
 
 //merchant query 
