@@ -13,15 +13,23 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
                 if (!result) {
                     return res.status(400).json({ error: 'Incorrect email or password' });
                 }
-                let id_client = checkUser[0].id
-                let payload = {id_client}
-                let createToken = await utils.createToken(payload)
+                if(checkUser[0].user_type == 1){
+                    let id_client = checkUser[0].id
+                    let payload = {id_client}
+                    let createToken = await utils.createToken(payload)
 
-                res.json({
-                    status: true, 
-                    message: "Login Success", 
-                    clientToken: createToken
-                })
+                    res.json({
+                        status: true, 
+                        message: "Login Success", 
+                        clientToken: createToken
+                    })
+                } else {
+                    res.json({
+                        status: false, 
+                        message: "User not found", 
+                    })
+                }
+                
             })
         } else {
             res.json({
@@ -72,7 +80,8 @@ const registerUser = async (req: Request, res: Response, next: NextFunction) => 
             email: email,
             birth_date: new Date(birth_date),
             address: address,
-            phone_number: phone_number
+            phone_number: phone_number, 
+            user_type: 1
         })
 
         res.json({
@@ -131,7 +140,8 @@ const editUser = async (req: Request, res: Response, next: NextFunction) => {
                 email: email,
                 birth_date: birth_date,
                 address: address,
-                phone_number: phone_number
+                phone_number: phone_number, 
+                user_type: 1
             }, id)
     
             res.json({

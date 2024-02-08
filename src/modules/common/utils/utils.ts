@@ -3,6 +3,18 @@ import jwt from 'jsonwebtoken'
 import * as authConfig from '../../../../config/authConfig'
 import * as model from "../models/models"
 
+export async function comparePassword(password: any, password_user: any): Promise<boolean>{
+    return new Promise((resolve, reject) => {
+        bcrypt.compare(password, password_user, async (error, result) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(result);
+            }
+        })
+    })
+}
+
 export async function hashPassword(password: any) {
     const saltRounds = 10;
     const hash = await bcrypt.hash(password, saltRounds);
