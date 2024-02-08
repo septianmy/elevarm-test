@@ -106,8 +106,47 @@ const authRiderMiddleware = async (req: CustomRequest, res: Response, next: Next
         })
     }
 }
+
+const authMerchantMiddleware = async (req: CustomRequest, res: Response, next: NextFunction) => {
+    try {
+        const clientToken = req.headers['merchant-token'];
+        if (!clientToken) {
+            return res.status(401).json({ message: 'Merchant token missing' });
+        }
+
+        let verifyToken = await utils.verifyTokenMerchant(clientToken)
+
+        if(verifyToken != ''){
+            const checkDataMerchant = await model.findMerchantById(verifyToken)
+            if(checkDataMerchant.length != 0){
+                req.user = checkDataMerchant[0].id;
+                next()
+            } else {
+                res.send({
+                    status: false, 
+                    message: "Unauthorized"
+                })
+            }
+        } else {
+            console.log(verifyToken)
+            res.send({
+                status: false, 
+                message: "Invalid Token"
+            })
+        }
+
+    } catch (error) {
+        res.json({
+            status: false,
+            message: "Something Wrong"
+        })
+    }
+}
+
+
 export {
     authClientMiddleware, 
     authAdminMiddleware, 
-    authRiderMiddleware
+    authRiderMiddleware, 
+    authMerchantMiddleware
 } ;

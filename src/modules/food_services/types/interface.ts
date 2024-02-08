@@ -11,3 +11,12 @@ export interface dataFoodOrderDetail {
     food_id: String,  
     quantity: String, 
 }
+
+export interface dataFoodMerchant {
+    merchant_id: any, 
+    name: String, 
+    price: Number, 
+    image_url: String, 
+    status: Boolean, 
+    food_type: Number
+}
