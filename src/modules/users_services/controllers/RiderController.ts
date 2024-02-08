@@ -20,7 +20,7 @@ const loginRider = async (req: Request, res: Response, next: NextFunction) => {
                     if(checkDataRider.length != 0){
                         let id_client = checkDataRider[0].id
                         let payload = {id_client}
-                        let createToken = await utils.createToken(payload)
+                        let createToken = await utils.createTokenRider(payload)
                         res.json({
                             status: true, 
                             message: "Login Success", 

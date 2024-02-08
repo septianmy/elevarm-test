@@ -31,6 +31,11 @@ export async function createTokenAdmin(payload: any) {
     return token
 }
 
+export async function createTokenRider(payload: any) {
+    const token = jwt.sign(payload, authConfig.secretRiderToken);
+    return token
+}
+
 export async function verifyToken(token_client: any){
     let resultToken = ''
     jwt.verify(token_client, authConfig.secret, (err: any, result: any) => {
@@ -43,6 +48,17 @@ export async function verifyToken(token_client: any){
 }
 
 export async function verifyTokenAdmin(token_client: any){
+    let resultToken = ''
+    jwt.verify(token_client, authConfig.secretAdmin, (err: any, result: any) => {
+        if (err) {
+            return false
+        }
+        resultToken = result.id_client
+    });
+    return resultToken
+}
+
+export async function verifyTokenRider(token_client: any){
     let resultToken = ''
     jwt.verify(token_client, authConfig.secretAdmin, (err: any, result: any) => {
         if (err) {
