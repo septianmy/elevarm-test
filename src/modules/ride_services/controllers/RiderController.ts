@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import CustomRequest from '../../common/types/CustomRequest';
 import * as model from "../models/model"
+import * as foodOrderModel from "../../food_services/models/OrderModel"
 
 const getOrderRider = async (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
@@ -48,20 +49,30 @@ const confirmOrderRider = async (req: CustomRequest, res: Response, next: NextFu
 
                 const updateOrder = await model.updateOrderRequestRider(id, rider_id, confirm)
                 if(confirm == 2 || confirm == 3){
+                    // check food order id 
+                    if(checkOrder[0].food_order_id != null){
+                        //update food order id 
+                        if(confirm == 2){
+                            await foodOrderModel.updateFinishFoodOrder(checkOrder[0].food_order_id, confirm)
+                        } else if(confirm == 3){
+                            await foodOrderModel.updateFinishFoodOrder(checkOrder[0].food_order_id, "4" )
+                        }
+                    }
+                    
                     const changeStatusRider = await model.updateRidingStatus(rider_id, false)
                 } 
                 await model.commit()
                 
                 switch(confirm) { 
-                    case 1: { 
+                    case "1": { 
                        message = "Order Accepted Succesfully"
                        break; 
                     } 
-                    case 2: { 
+                    case "2": { 
                         message = "Order Finished Succesfully"
                        break; 
                     } 
-                    case 3: { 
+                    case "3": { 
                         message = "Order Rejected Succesfully"
                         break; 
                      } 
@@ -90,6 +101,7 @@ const confirmOrderRider = async (req: CustomRequest, res: Response, next: NextFu
         }
         
     } catch (error) {
+        console.log(error)
         await model.rollback()
         res.json({
             status: false, 

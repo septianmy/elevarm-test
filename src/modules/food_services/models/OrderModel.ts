@@ -150,3 +150,7 @@ export const detailOrderMerchant = async (id: String, merchant_id: any) => {
 export const updateOrderMerchant = async (status: any, rider_order_id: any, id: String, merchant_id: any) => {
     return query('UPDATE food_orders SET status = $1, ride_order_id = $2 WHERE id=$3 AND merchant_id=$4', [status,rider_order_id, id, merchant_id])
 }
+
+export const updateFinishFoodOrder = async (id: String, status: any) => {
+    return query('UPDATE food_orders SET status = $1 WHERE id = $2', [status, id])
+}
