@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import * as authConfig from '../../../../config/authConfig'
+import * as model from "../models/models"
 
 export async function hashPassword(password: any) {
     const saltRounds = 10;
@@ -38,4 +39,19 @@ export async function verifyTokenAdmin(token_client: any){
         resultToken = result.id_client
     });
     return resultToken
+}
+
+export async function getFare(distance: any){
+    let fare = null
+    let distance_km = distance / 1000
+
+    const dataFare = await model.findFare()
+
+    if(dataFare.length != 0){
+        fare = dataFare[0].fare_per_km * distance_km
+    } else {
+        fare = process.env.BASE_FARE
+    }
+    
+    return fare
 }
