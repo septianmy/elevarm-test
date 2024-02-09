@@ -1,0 +1,8 @@
+DB_USER=postgres
+DB_HOST=localhost
+DB_DATABASE=elevarm_test
+DB_PASSWORD=root
+DB_PORT=5432
+
+GOOGLE_API_KEY=AIzaSyBhKnqwY4wr7n5N-n7ojah8W4wzzzrQqi4
+BASE_FARE=5000
