@@ -24,5 +24,5 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.listen(port, () => {
-console.log(`Server is running on http://localhost:${port}`);
+console.log(`Server is running on http://localhost:${process.env.SERVER_PORT}`);
 });
